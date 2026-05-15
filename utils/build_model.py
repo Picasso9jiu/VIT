@@ -63,7 +63,7 @@ class MatMul(nn.Module):
         return A @ B
 
 
-def build_model(name):
+def build_model(name, pretrained=True):
     """
     Get a vision transformer model.
     This will replace matrix multiplication operations with matmul modules in the model.
@@ -76,7 +76,7 @@ def build_model(name):
     These models are finetuned on imagenet-1k and should use ViTImageNetLoaderGenerator
     for calibration and testing.
     """
-    model = timm.create_model(name, pretrained=True)
+    model = timm.create_model(name, pretrained=pretrained)
 
     #for module in model.modules():
     for name, module in model.named_modules():

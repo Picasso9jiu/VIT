@@ -1,0 +1,6 @@
+dataset/
+*.pth
+*.onnx
+__pycache__/
+.claude/
+*.output

@@ -13,18 +13,18 @@ from quant import *
 
 def get_args_parser():
     parser = argparse.ArgumentParser(description="I&S-ViT", add_help=False)
-    parser.add_argument("--model", default="deit_small",
+    parser.add_argument("--model", default="vit_base",
                         choices=['vit_tiny','vit_small', 'vit_base',
                             'deit_tiny', 'deit_small', 'deit_base', 
                             'swin_tiny', 'swin_small', 'swin_base'],
                         help="model")
-    parser.add_argument('--dataset', default="/dataset/imagenet/",
+    parser.add_argument('--dataset', default="./dataset/imagenet/",
                         help='path to dataset')
-    parser.add_argument("--calib-batchsize", default=1024,
+    parser.add_argument("--calib-batchsize", default=32,
                         type=int, help="batchsize of validation set") 
-    parser.add_argument("--val-batchsize", default=200,
+    parser.add_argument("--val-batchsize", default=32,
                         type=int, help="batchsize of validation set")
-    parser.add_argument("--num-workers", default=16, type=int,
+    parser.add_argument("--num-workers", default=0, type=int,
                         help="number of data loading workers (default: 16)")
     parser.add_argument("--device", default="cuda", type=str, help="device")
     parser.add_argument("--print-freq", default=100,
@@ -112,7 +112,7 @@ def main():
         _ = q_model(calib_data[:64])
 
     kwargs = dict(cali_data=calib_data, asym=True,
-                   warmup=args.warmup, act_quant=True, weight_quant=False, opt_mode='mse', batch_size=64, iters=args.iter)
+                   warmup=args.warmup, act_quant=True, weight_quant=False, opt_mode='mse', batch_size=32, iters=args.iter)
     
     # first and last layer require optimization
     q_model.patch_embed.proj.ignore_reconstruction = False
@@ -234,7 +234,7 @@ def main():
         _ = q_model(calib_data[:64])
 
     kwargs = dict(cali_data=calib_data, asym=True,
-                   warmup=args.warmup, act_quant=True, weight_quant=True, opt_mode='mse', batch_size=64, iters=args.iter, last_stage = True)
+                   warmup=args.warmup, act_quant=True, weight_quant=True, opt_mode='mse', batch_size=32, iters=args.iter, last_stage = True)
 
     print("re optimization")
     if "swin" in args.model:
@@ -248,6 +248,11 @@ def main():
         args, val_loader, q_model, criterion, device
     )
     print()
+    # ====================== 【自动保存模型】 ======================
+    save_name = f"{args.model}_w{args.w_bits}a{args.a_bits}.pth"
+    torch.save(q_model.state_dict(), save_name)
+    print(f"✅ 模型已保存：{save_name}")
+    # ==========================================================================
 
 
 
