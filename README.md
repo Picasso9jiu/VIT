@@ -414,23 +414,6 @@ weight_int8 = round(weight_fp32 / delta + zero_point).clamp(0, 255)
 - **自动化 kernel 生成**：针对任意 PTQ 参数格式自动生成 Triton/CUDA 推理 kernel，降低学术研究到工程部署的门槛
 - **量化-部署联合设计**：在量化训练阶段就考虑部署平台的硬件约束（内存层次、Tensor Core 尺寸、支持的数据类型），将部署可行性纳入优化目标
 
----
+**应用层面：**
 
-## 5. 致谢与引用
-
-```
-@article{zhong2023s,
-  title={I\&S-ViT: An Inclusive \& Stable Method for Pushing the Limit of Post-Training ViTs Quantization},
-  author={Zhong, Yunshan and Hu, Jiawei and Lin, Mingbao and Chen, Mengzhao and Ji, Rongrong},
-  journal={IEEE Transactions on Pattern Analysis \& Machine Intelligence (TPAMI)},
-  doi={10.1109/TPAMI.2025.3610466},
-  year={2025}
-}
-
-@inproceedings{li2023repq,
-  title={RepQ-ViT: Scale Reparameterization for Post-Training Quantization of Vision Transformers},
-  author={Li, Zhikai and Xiao, Junrui and Yang, Lianwei and Gu, Qingyi},
-  booktitle={ICCV},
-  year={2023}
-}
-```
+- **实际场景落地部署**：寻找一个具体的应用场景（如移动端实时图像分类、边缘设备目标检测等），将轻量化模型部署到该实际环境中，验证量化模型在真实硬件上的端到端性能与能效优势，实现从论文复现到真正落地的闭环
